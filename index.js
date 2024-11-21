@@ -1,3 +1,4 @@
+const os = require("os");
 const express = require("express");
 const axios = require("axios");
 const bodyParser = require("body-parser");
@@ -5,6 +6,20 @@ const crypto = require("crypto");
 
 const app = express();
 const port = 3000;
+
+// 获取本地 IP 地址
+function getLocalIPAddress() {
+  const interfaces = os.networkInterfaces();
+  for (const interfaceName in interfaces) {
+    const iface = interfaces[interfaceName];
+    for (const alias of iface) {
+      if (alias.family === "IPv4" && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+  return "127.0.0.1"; // 如果未找到外部地址，返回 localhost
+}
 
 // 配置静态文件目录
 app.use(express.static("public"));
@@ -16,7 +31,7 @@ app.use(bodyParser.json());
 const appSecret = "5Ktul9tEP2";
 
 // 处理 AJAX 请求并转发
-app.post("/fullSimCard/changeFullNetwork", async (req, res) => {
+app.post("/api/fullSimCard/changeFullNetwork", async (req, res) => {
   try {
     // 从前端请求体中获取 operator 值
     const { newIspId } = req.body;
@@ -45,7 +60,7 @@ app.post("/fullSimCard/changeFullNetwork", async (req, res) => {
     const stringA = sortedKeys.map((key) => `${key}=${params[key]}`).join("&");
 
     // 2. 拼接 appSecret 并生成 MD5 签名
-    const stringSignTemp = stringA + appSecret;
+    const stringSignTemp = stringA + "&appSecret=" + appSecret;
     const sign = crypto
       .createHash("md5")
       .update(stringSignTemp)
@@ -63,9 +78,11 @@ app.post("/fullSimCard/changeFullNetwork", async (req, res) => {
 
     // 返回数据给前端
     const { data } = apiResponse;
+    const code = data.code + "";
     return res.json({
-      code: "0",
-      data: data.code,
+      code,
+      data: data.operator,
+      message: getMessage(code),
     });
   } catch (error) {
     console.error("Error:", error.message);
@@ -75,7 +92,23 @@ app.post("/fullSimCard/changeFullNetwork", async (req, res) => {
   }
 });
 
+function getMessage(code) {
+  const msgMap = {
+    0: "正常",
+    1: "appid，secret，sign有误",
+    4: "运营商有误",
+    1001: "1001：连接设备超时",
+    1002: "1002：设备异常",
+    1003: "1003：设备异常",
+    9999: "意外错误",
+  };
+  return msgMap[code] || "未知错误";
+}
+
 // 启动服务器
 app.listen(port, () => {
-  console.log(`静态服务器运行在 http://localhost:${port}`);
+  const localIP = getLocalIPAddress();
+  console.log(`静态服务器运行在:`);
+  console.log(`- 本地访问: http://localhost:${port}`);
+  console.log(`- 局域网访问: http://${localIP}:${port}`);
 });
