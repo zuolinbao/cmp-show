@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ZH">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <title>国际物联网CMP平台</title>
+    <script th:inline="javascript">
+      // var _hmt = _hmt || [];
+      // (function() {
+      //   var hm = document.createElement("script");
+      //   hm.src = "https://hm.baidu.com/hm.js?469b8e7d98f12c75e6be0b547061efea";
+      //   var s = document.getElementsByTagName("script")[0];
+      //   s.parentNode.insertBefore(hm, s);
+      // })();
+      var iamHost = /*[[${iamHost}]]*/ 'https://iam.ctwing.cn'
+      var errorCode = /*[[${errorCode}]]*/ ''
+      var errorUser = /*[[${errorUser}]]*/ ''
+    </script>
+  </head>
+
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly
+        without JavaScript enabled. Please enable it to continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
