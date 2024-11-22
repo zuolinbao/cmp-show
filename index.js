@@ -112,7 +112,6 @@ app.post("/api/serviceAccept/queryJTCardCurrentInfo", async (req, res) => {
     const params = {
       dt,
       appid,
-      imei,
       secret,
       jtcid,
     };
@@ -134,7 +133,7 @@ app.post("/api/serviceAccept/queryJTCardCurrentInfo", async (req, res) => {
 
     // 转发到指定地址
     const apiResponse = await axios.post(
-      "http://129.204.34.245:8080/serviceAccept/queryJTCardCurrentInfo",
+      "http://129.204.34.245:8080/api/serviceAccept/queryJTCardCurrentInfo",
       requestBody
     );
 
