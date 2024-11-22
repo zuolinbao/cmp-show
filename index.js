@@ -81,7 +81,7 @@ app.post("/api/fullSimCard/changeFullNetwork", async (req, res) => {
     const code = data.code + "";
     return res.json({
       code,
-      data: data.operator,
+      data: data.operator || '',
       message: getMessage(code),
     });
   } catch (error) {
