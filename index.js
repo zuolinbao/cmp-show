@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const crypto = require("crypto");
 
 const app = express();
-const port = 3000;
+const port = 9527;
 
 // 获取本地 IP 地址
 function getLocalIPAddress() {
